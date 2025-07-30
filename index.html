@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hello!</title>
+  <title>Share Location to Me</title>
 </head>
 <body>
-  <h2>Click here for the surprise </h2>
+  <h2>Click to share your location with me</h2>
   <button onclick="getLocation()">Share Location</button>
-  <p id="location"></p>
+  <p id="status"></p>
 
   <script>
+    const myNumber = "919876543210"; // your WhatsApp number with country code
+
     function getLocation() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
+        navigator.geolocation.getCurrentPosition(sendLocation, showError);
       } else {
-        document.getElementById("location").innerHTML = "Geolocation not supported.";
+        document.getElementById("status").innerHTML = "Geolocation not supported.";
       }
     }
 
-    function showPosition(position) {
+    function sendLocation(position) {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-      document.getElementById("location").innerHTML = 
-        `Latitude: ${lat} <br> Longitude: ${lon}`;
+      const msg = `Hi, my location is: https://maps.google.com/?q=${lat},${lon}`;
+      const url = `https://wa.me/${myNumber}?text=${encodeURIComponent(msg)}`;
+      document.getElementById("status").innerHTML = "Opening WhatsApp to send your location...";
+      window.open(url, '_blank');
+    }
+
+    function showError(error) {
+      document.getElementById("status").innerHTML = "Error getting location: " + error.message;
     }
   </script>
 </body>
